@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<meta charset="utf-8">
+
+	<head>
+		<title>Simple 2D Particle system</title>
+
+		<style type="text/css">
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+		</style>
+	</head>
+	<body >
+
+	
+		<script src="js/ImageParticle.js"></script>	
+		<script>
+
+window.addEventListener("load", setup); 
+
+// screen size variables
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight,
+
+	// canvas element and 2D context
+	canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' ),
+
+	mouseX = screenWidth/2, 
+	mouseY = screenHeight/2, 
+	mouseDown = false,
+
+	particles = [],
+	maxParticles = 450,
+	particleImage = new Image(), 
+	counter = 0;
+	
+particleImage.src = 'img/ParticleBlue.png'; 
+
+function setup() {
+
+	// CANVAS SET UP
+
+	document.body.appendChild(canvas); 
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight;
+
+	initMouseListeners(); 
+	
+	draw();
+
+}
+
+
+
+//
+
+function draw() {
+
+	// make some particles
+
+	if(counter%4==0) makeParticle(1);		
+	
+	// clear the canvas
+	context.clearRect(0,0, screenWidth, screenHeight);
+  	
+  	// iteratate through each particle
+	for (i=0; i<particles.length; i++) {
+		var particle = particles[i]; 
+		
+		// render it
+		particle.render(context); 
+		
+		// and then update. We always render first so particle
+		// appears in the starting point.
+		particle.update();
+
+	}
+	
+	// Keep taking the oldest particles away until we have 
+	// fewer than the maximum allowed. 
+	 
+	while(particles.length>maxParticles)
+		particles.shift(); 
+	
+	
+	counter++; 
+	
+	window.requestAnimationFrame(draw);
+}
+
+function makeParticle(particleCount) {
+
+	for(var i=0; i<particleCount;i++) {
+		
+		// create a new particle in the middle of the stage
+		var particle = new ImageParticle(particleImage, screenWidth/2, screenHeight/2); 
+		//var particle = new ImageParticle(particleImage, mouseX, mouseY); 
+		
+		// give it a random x and y velocity
+		var speed = random(0,2); 
+		var angle = random(0,Math.PI*2); 
+		
+		particle.velX = Math.cos(angle)*speed;
+		particle.velY = Math.sin(angle)*speed;
+		particle.size = random(1,7);
+		particle.gravity = 0; 
+		particle.drag = 0.995;
+		particle.shrink = 0.99;
+		
+		// sets the blend mode so particles are drawn with an additive blend
+		//particle.compositeOperation = 'lighter';
+		
+		// add it to the array
+		particles.push(particle); 
+		
+	}
+
+}
+	
+function initMouseListeners() {
+	document.addEventListener('mousemove', onMouseMove, false);
+	document.addEventListener( 'mousedown', onMouseDown, false );
+	document.addEventListener( 'mouseup', onMouseUp, false );
+}
+
+function onMouseMove( event ) {
+	mouseX = event.clientX;
+	mouseY = event.clientY;
+}
+
+function onMouseDown(event) {
+	mouseDown = true; 
+}
+function onMouseUp(event) {
+	mouseDown = false; 
+}
+
+function random(min, max) {
+	return ((Math.random()*(max-min)) + min); 
+}
+
+
+		</script>
+	</body>
+</html>

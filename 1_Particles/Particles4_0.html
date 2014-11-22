@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<meta charset="utf-8">
+
+	<head>
+		<title>Simple 2D Particle system</title>
+
+		<style type="text/css">
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+		</style>
+	</head>
+	<body >
+
+	
+		<script src="js/ImageParticle.js"></script>	
+		<script>
+
+window.addEventListener("load", setup); 
+
+// screen size variables
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight,
+
+	// canvas element and 2D context
+	canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' ),
+
+	mouseX = screenWidth/2, 
+	mouseY = screenHeight/2, 
+	mouseDown = false,
+	
+	mouseVelX = 0, 
+	mouseVelY = 0, 
+	lastMouseX = mouseX, 
+	lastMouseY = mouseY,
+
+	particles = [],
+	maxParticles = 250,
+	particleImage = new Image(), 
+	counter = 0;
+	
+particleImage.src = 'img/ParticleCyan.png'; 
+
+function setup() {
+
+	// CANVAS SET UP
+
+	document.body.appendChild(canvas); 
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight;
+
+	initMouseListeners(); 
+	
+	draw();
+
+}
+
+
+
+//
+
+function draw() {
+
+
+	mouseVelX = mouseX-lastMouseX; 
+	mouseVelY = mouseY-lastMouseY; 
+	lastMouseX = mouseX; 
+	lastMouseY = mouseY;
+
+	// make some particles
+
+	 makeParticle(4);		
+	
+	// clear the canvas
+	context.clearRect(0,0, screenWidth, screenHeight);
+  	
+  	// iteratate through each particle
+	for (i=0; i<particles.length; i++) {
+		var particle = particles[i]; 
+		
+		// render it
+		particle.render(context); 
+		
+		// and then update. We always render first so particle
+		// appears in the starting point.
+		particle.update();
+
+	}
+	
+	// Keep taking the oldest particles away until we have 
+	// fewer than the maximum allowed. 
+	 
+	while(particles.length>maxParticles)
+		particles.shift(); 
+	
+	
+	counter++; 
+	
+	window.requestAnimationFrame(draw);
+}
+
+function makeParticle(particleCount) {
+
+	for(var i=0; i<particleCount;i++) {
+		
+		// create a new particle in the middle of the stage
+		var particle = new ImageParticle(particleImage, mouseX, mouseY); 
+		
+		particle.velX = random(-5,5);// +  (mouseVelX*0.3) ;
+		particle.velY = random(-5,5);// +  (mouseVelY*0.3) ;
+		particle.size = random(2,4);
+		
+		particle.gravity = 0.06; 
+		particle.drag = 0.96;
+		particle.shrink = 0.98; 
+		
+		//particle.compositeOperation = 'lighter';
+		
+		//particle.shimmer = true; 
+		
+		
+		// add it to the array
+		particles.push(particle); 
+		
+	}
+
+}
+	
+function initMouseListeners() {
+	document.addEventListener('mousemove', onMouseMove, false);
+	document.addEventListener( 'mousedown', onMouseDown, false );
+	document.addEventListener( 'mouseup', onMouseUp, false );
+}
+
+function onMouseMove( event ) {
+	mouseX = event.clientX;
+	mouseY = event.clientY;
+}
+
+function onMouseDown(event) {
+	mouseDown = true; 
+}
+function onMouseUp(event) {
+	mouseDown = false; 
+}
+
+function random(min, max) {
+	return ((Math.random()*(max-min)) + min); 
+}
+
+
+		</script>
+	</body>
+</html>

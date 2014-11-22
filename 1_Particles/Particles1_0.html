@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<meta charset="utf-8">
+
+	<head>
+		<title>Simple 2D Particle system</title>
+
+		<style type="text/css">
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+		</style>
+	</head>
+	<body>
+	
+	<script src="js/SimpleParticle.js"></script>		
+	<script>
+
+// screen size variables
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight;
+
+// canvas element and 2D context
+var	canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+var particle,
+	particles = [],
+	maxParticles = 650;
+
+setup();
+
+
+function setup() {
+
+	// CANVAS SET UP
+
+	document.body.appendChild(canvas); 
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight;
+	
+	draw();
+
+}
+
+
+
+//
+
+function draw() {
+
+	// create a new particle in the middle of the stage
+	var particle = new Particle(screenWidth/2, screenHeight/2); 
+	
+	// give it a random x and y velocity
+		
+	particle.velX = random(-2,2); 
+	particle.velY = random(-2,2);
+	
+	// add it to the array
+	particles.push(particle); 
+ 
+	
+	// clear the canvas
+	context.clearRect(0,0, screenWidth, screenHeight);
+  	
+  	// iteratate through each particle
+	for (i=0; i<particles.length; i++) {
+		var particle = particles[i]; 
+		
+		// render it
+		particle.render(context); 
+		
+		// and then update. We always render first so particle
+		// appears in the starting point.
+		particle.update();
+		
+
+	}
+	
+	// Keep taking the oldest particles away until we have 
+	// fewer than the maximum allowed. 
+	 
+	while(particles.length>maxParticles)
+		particles.shift(); 
+	
+	window.requestAnimationFrame(draw);
+}
+
+
+function random(min, max) {
+	return ((Math.random()*(max-min)) + min); 
+}
+
+			
+		</script>
+	</body>
+</html>

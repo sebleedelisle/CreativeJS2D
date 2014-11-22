@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<meta charset="utf-8">
+
+	<head>
+		<title>Simple 2D Particle system</title>
+
+		<style type="text/css">
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+		</style>
+	</head>
+	<body >
+
+	
+		<script src="js/ImageParticle.js"></script>	
+		<script>
+
+window.addEventListener("load", setup); 
+
+// screen size variables
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight,
+
+	// canvas element and 2D context
+	canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' ),
+
+	mouseX = screenWidth/2, 
+	mouseY = screenHeight/2, 
+	mouseDown = false,
+
+particles = [],
+maxParticles = 450,
+particleImage = new Image();
+particleImage.src = 'img/ParticleBlue.png'; 
+
+function setup() {
+
+	// CANVAS SET UP
+
+	document.body.appendChild(canvas); 
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight;
+	
+	
+	initMouseListeners(); 
+	
+	draw();
+
+}
+
+
+
+//
+
+function draw() {
+
+	// make some particles
+	if(mouseDown)
+		makeParticle(8); 
+	else
+		makeParticle(1);		
+	
+	// clear the canvas
+	context.clearRect(0,0, screenWidth, screenHeight);
+  	
+  	// iteratate through each particle
+	for (i=0; i<particles.length; i++) {
+		var particle = particles[i]; 
+		
+		// render it
+		particle.render(context); 
+		
+		// and then update. We always render first so particle
+		// appears in the starting point.
+		particle.update();
+		
+		//Very simple collision detection with the floor
+		
+		if(particle.posY>screenHeight-100) {
+			particle.velY*=-0.9; 
+			particle.posY = screenHeight-100;
+		}
+		
+
+	}
+	
+	// Keep taking the oldest particles away until we have 
+	// fewer than the maximum allowed. 
+	 
+	while(particles.length>maxParticles)
+		particles.shift(); 
+	
+	window.requestAnimationFrame(draw);
+}
+
+function makeParticle(particleCount) {
+
+	for(var i=0; i<particleCount;i++) {
+		
+		// create a new particle in the middle of the stage
+		var particle = new ImageParticle(particleImage, screenWidth/2, screenHeight/2); 
+		//var particle = new ImageParticle(particleImage, mouseX, mouseY); 
+		
+		// give it a random x and y velocity
+		particle.velX = random(-7,7);
+		particle.velY = random(-7,7);
+		particle.size = random(0.2,0.5);
+		particle.gravity = 0.5; 
+		particle.drag = 0.98;
+		particle.shrink = 0.99; 
+		
+		// sets the blend mode so particles are drawn with an additive blend
+		//particle.compositeOperation = 'lighter';
+		
+		// add it to the array
+		particles.push(particle); 
+		
+	}
+
+}
+	
+function initMouseListeners() {
+	document.addEventListener('mousemove', onMouseMove, false);
+	document.addEventListener( 'mousedown', onMouseDown, false );
+	document.addEventListener( 'mouseup', onMouseUp, false );
+}
+
+function onMouseMove( event ) {
+	mouseX = event.clientX;
+	mouseY = event.clientY;
+}
+
+function onMouseDown(event) {
+	mouseDown = true; 
+}
+function onMouseUp(event) {
+	mouseDown = false; 
+}
+
+function random(min, max) {
+	return ((Math.random()*(max-min)) + min); 
+}
+
+
+		</script>
+	</body>
+</html>
