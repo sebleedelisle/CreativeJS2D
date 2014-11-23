@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script src="../libs/Vector2.js"></script>
+<script src="js/Bullet.js"></script>
+<script src="js/SimpleParticle.js"></script>
+<script src="js/ShipMovingSebs.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+
+
+var halfWidth, 
+	halfHeight,
+	bullets,
+	particles,
+	spareParticles,
+	ship,
+	thrusting = false,
+	rotateLeft = false, 
+	rotateRight = false; 
+	
+	
+function setup() { 
+
+	setupCanvas();
+
+	halfWidth = canvas.width/2;
+	halfHeight = canvas.height/2;
+	bullets = [];
+	particles = [];
+	spareParticles = [];
+	ship = new ShipMoving(halfWidth, halfHeight);
+}
+
+document.addEventListener( 'keydown', onKeyDown, false );
+document.addEventListener( 'keyup', onKeyUp, false );
+
+function draw() {
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	if(thrusting) {
+		ship.thrust(); 
+		makeParticles(3); 
+	}
+		
+	if(rotateLeft) ship.rotateLeft(); 
+	if(rotateRight) ship.rotateRight(); 
+	
+	ship.update(); 
+	with(ship.pos) {
+		if(x<0) x = canvas.width; 
+		else if(x>canvas.width) x = 0;
+		if(y<0) y = canvas.height; 
+		else if (y>canvas.height) y = 0; 
+	}
+	ship.draw(c, thrusting);
+	
+	updateParticles(); 
+		
+	
+}
+
+function updateParticles() {
+//	console.log(particles.length); 
+	
+	c.globalCompositeOperation = "lighter";
+	for (var i = 0; i< particles.length; i++) {
+		var particle = particles[i]; 
+	
+		if(!particle.enabled) continue; 
+		
+		particle.update(); 
+		particle.render(c); 
+	//	console.log(c,particle.pos.x, particle.pos.y, particle.vel.x, particle.vel.y); 
+		
+		if(!particle.enabled) spareParticles.push(particle); 
+		
+	}
+	
+}
+
+function makeParticles(n) {
+	var particle; 
+	var pos = ship.pos; 
+	
+	for(var i=0; i<n; i++) {
+		
+		if(spareParticles.length>0) {
+			 particle = spareParticles.pop(); 
+			 particle.reset(pos.x, pos.y); 
+		} else {	 			
+			particle = new Particle(pos.x, pos.y); 
+			particles.push(particle); 
+		}
+		
+		particle.size =7;// Math.random()*2 +1; 
+		//particle.alpha = Math.random()*0.5; 
+		particle.vel.reset(-10,0); 
+		
+		particle.vel.rotate(ship.angle + (Math.random()*30) -15); 
+		
+		particle.shrink = 0.93; 
+		
+		particle.drag = 0.9; 
+
+		particle.pos.plusEq(particle.vel); 
+		particle.vel.multiplyEq(Math.random()*0.5+0.5); 
+		
+		particle.vel.plusEq(ship.vel); 
+		
+	}
+	
+	
+}
+
+function onKeyDown(e) {	
+	if(e.keyCode == 38) thrusting = true; 
+	else if(e.keyCode == 37) rotateLeft = true; 
+	else if (e.keyCode == 39) rotateRight = true; 
+	
+}
+function onKeyUp(e) {
+	if(e.keyCode == 38) thrusting = false; 
+	else if(e.keyCode == 37) rotateLeft = false; 
+	else if (e.keyCode == 39) rotateRight = false;
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+
+</script>
+</body>
+</html>

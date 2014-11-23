@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script src="../libs/Vector2.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+
+var	halfWidth, 
+	halfHeight, 
+	mousePos, 
+	shipPos;
+
+var angle = 0; 
+
+function setup() { 
+	
+	setupCanvas();
+	halfWidth = canvas.width/2; 
+	halfHeight = canvas.height/2;
+	shipPos = new Vector2(halfWidth, halfHeight);
+	mousePos = new Vector2(0,0);
+}
+ 
+function draw() {
+
+	mousePos.reset(mouseX - canvas.offsetLeft, mouseY - canvas.offsetTop); 
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	c.save();
+	
+	c.translate(halfWidth, halfHeight); 
+	
+	var diff = mousePos.minusNew(shipPos); 
+	
+	c.rotate(angle);  
+	
+	c.beginPath();
+	c.moveTo(-15, -15);
+	c.lineTo(-15, 15);
+	c.lineTo(21, 0);
+
+	c.closePath(); 
+	c.stroke();
+	c.restore();
+	c.strokeCircle(mousePos.x, mousePos.y,5); 
+
+}
+
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+
+</script>
+</body>
+</html>

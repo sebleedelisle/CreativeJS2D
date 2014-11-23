@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;	
+		text-align:center;
+	}
+
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	ctx = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+var generation = 0; 
+
+var counter = 0; 
+
+var tree = new Branch(100,0); 
+frameRate = 30; 
+
+function draw() { 
+
+	counter++; 
+	ctx.clearRect(0,0,800,600); 
+
+	ctx.save(); 
+	ctx.translate(400,500); 
+	tree.render();
+	ctx.restore(); 
+}
+
+function Branch(len, angle) { 
+	generation++; 
+	
+	this.len = len; 
+	this.angle = angle; 
+	this.children = []; 
+	this.growth = 0; 
+	this.delay = generation *4; 
+	this.swaySpeed = random(0.05,0.2); 
+	
+	if(len>12) {
+		this.children.push(new Branch(len * random(0.7,0.9), 30)); 
+		this.children.push(new Branch(len * random(0.7,0.9), -30)); 
+	}
+	
+	this.render = function () { 
+		
+		if(this.delay>0) {
+			this.delay--; 
+		} else {
+			this.growth += ((1-this.growth)*0.1); 
+		}
+		
+		var len = this.len * this.growth; 
+		var angle = this.angle + Math.sin(counter*this.swaySpeed); 
+		
+		ctx.save(); 
+		ctx.strokeStyle = 'white';
+		ctx.lineWidth = len/10;
+		ctx.beginPath(); 
+		ctx.moveTo(0,0);
+		ctx.quadraticCurveTo(0,-len/2, Math.sin(angle/2* Math.PI/180)*len, Math.cos(angle/2* Math.PI/180)*-len); 
+		ctx.stroke(); 
+		ctx.rotate(angle/2 * Math.PI/180); 
+		ctx.translate(0,-len); 
+		ctx.rotate(angle/2 * Math.PI/180); 
+		
+		for(var i=0; i<this.children.length;i++) { 
+			
+			this.children[i].render(); 
+			
+		}
+		
+		ctx.restore();		
+		
+		
+		
+	};
+	
+	generation--; 
+}
+
+ 
+</script>
+</body>
+</html>

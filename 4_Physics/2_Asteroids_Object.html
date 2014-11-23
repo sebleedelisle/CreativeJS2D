@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Canvas Asteroids</title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"></script>
+<script src="js/MovingCircle.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+	
+var asteroids = [];
+
+function setup() { 
+		
+	setupCanvas();
+	
+	frameRate = 30; 
+	
+	for(var i = 0; i<5; i++) {
+	
+		var asteroid = new MovingCircle(random(0,canvas.width), random(0, canvas.height), 50);
+		asteroid.vel.reset(random(-5,5), random(-5,5));  
+		asteroids.push(asteroid); 
+	
+		// change velocity to be constant speed rather than random
+	
+	}
+}
+ 
+function draw() {
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+
+	for(var i = 0; i< asteroids.length; i++) {
+		
+		var asteroid = asteroids[i]; 
+			
+		asteroid.update(canvas); 
+		asteroid.draw(c); 
+	}
+
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+
+</script>
+</body>
+</html>

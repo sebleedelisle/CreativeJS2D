@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+		overflow: hidden;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' ), 
+	
+	screenWidth = window.innerWidth, 
+	screenHeight = window.innerHeight, 
+	halfWidth = screenWidth/2, 
+	halfHeight = screenHeight/2;
+	
+
+canvas.width = screenWidth; 
+canvas.height = screenHeight; 
+
+document.body.appendChild(canvas);
+
+var c = context,
+	counter = 0; 
+ 
+
+
+function setup() { 
+	c.translate(screenWidth/2, screenHeight/2); 
+
+	c.strokeStyle = "white"; 
+	c.lineWidth = 2; 
+	c.lineCap = "round"; 
+
+}
+
+
+function draw() {
+
+	c.fillStyle = rgba(0,0,0,0.01); 
+	c.fillRect(-halfWidth, -halfHeight, screenWidth, screenHeight); 
+	
+	c.lineWidth = (2+(Math.sin(counter*0.1)))*3; 
+	c.strokeStyle = hsl(counter, 100, 50); 
+	
+	if(mouseDown) {
+		
+		
+		for(var angle = 0; angle< Math.PI*2; angle+=(Math.PI/4)) {
+		
+			c.save(); 
+		
+			c.rotate(angle); 
+			c.translate(-halfWidth, -halfHeight); 
+			c.line(lastMouseX, lastMouseY, mouseX, mouseY); 
+			
+			c.restore(); 
+	
+		}
+		
+		c.save(); 
+		c.scale(-1,1); 
+		
+		for(var angle = 0; angle< Math.PI*2; angle+=(Math.PI/4)) {
+		
+			c.save(); 
+			c.rotate(angle); 
+			c.translate(-halfWidth, -halfHeight); 
+			c.line(lastMouseX, lastMouseY, mouseX, mouseY); 
+			c.restore(); 
+	
+		}
+		
+		c.restore(); 
+		
+	}
+	
+	counter++; 
+	
+} 
+
+
+</script>
+</body>
+</html>

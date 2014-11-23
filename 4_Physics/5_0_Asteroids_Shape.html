@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Canvas Asteroids</title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"></script>
+<script src="js/Asteroid.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+	
+
+var asteroids = [],
+	spareAsteroids = [];
+
+function setup() { 
+
+	frameRate = 30; 
+	setupCanvas();
+	
+	for(var i = 0; i<5; i++) {
+	
+		asteroids[i] = new Asteroid(random(0,canvas.width), random(0, canvas.height), 50);
+		asteroids[i].vel.reset(3,0);  
+		asteroids[i].vel.rotate(random(360)); 
+	}
+}
+
+function draw() {
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+
+	for(var i = 0; i< asteroids.length; i++) {
+		
+		var asteroid = asteroids[i]; 
+		
+		if(!asteroid.enabled) continue; 
+		
+		asteroid.update(canvas); 
+		asteroid.draw(c); 
+	}
+
+}
+
+// automatically called by creative.js on a mouse press
+
+function onMouseDown() {
+	
+	for(var i = 0; i<asteroids.length; i++)	{
+		
+		var asteroid = asteroids[i]; 
+		if(!asteroid.enabled) continue; 
+		
+		if(asteroid.hitTest(mouseX - canvas.offsetLeft, mouseY - canvas.offsetTop)) {
+			if(asteroid.radius<15) 
+				asteroid.enabled = false; 
+			else {
+				
+				asteroid.reset(asteroid.radius/2);
+				
+				var newasteroid = makeNewAsteroid(asteroid.pos.x, asteroid.pos.y, asteroid.radius); 
+				newasteroid.vel.copyFrom(asteroid.vel);
+				
+				asteroid.vel.rotate(20); 
+				newasteroid.vel.rotate(-20); 
+				
+			}
+			break; 
+		}
+			
+	}
+	
+}
+
+function makeNewAsteroid(x,y,radius) {
+	var newasteroid; 
+	
+	if(spareAsteroids.length>0) {
+		newasteroid = spareAsteroids.pop(); 
+		newasteroid.pos.reset(x,y); 
+		newasteroid.radius = radius; 	
+	}
+	else 
+	{
+		newasteroid = new Asteroid(x,y,radius); 
+		asteroids.push(newasteroid); 
+	}
+	
+	return newasteroid;
+} 
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+</script>
+</body>
+</html>

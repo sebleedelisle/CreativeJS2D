@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center; 
+	}
+	canvas {
+		background-color:#111133;
+	}
+	
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var c = context; 
+
+
+c.fillStyle = 'red';
+c.fillRect(10,20,50,50);
+
+ 
+c.strokeStyle = '#fff'; 
+c.lineWidth =1;  
+
+//c.strokeRect(300,300,200,100);
+
+c.rect(100.5,100.5,200,100);
+
+c.fill();
+c.stroke();
+
+c.beginPath();
+c.moveTo(400,20);
+c.lineTo(450, 100);
+c.lineTo(500,20); 
+
+c.closePath();
+c.stroke();
+c.fill();
+
+c.beginPath(); 
+c.moveTo(600,60); 
+c.lineTo(500,200); 
+c.lineTo(450,60);
+c.closePath();
+
+c.fill();
+c.stroke();
+
+
+
+gradient = c.createLinearGradient(0,300,0,400);  // x1, y1, x2, y2
+gradient.addColorStop(0,'magenta');
+gradient.addColorStop(1,'cyan');
+
+c.fillStyle = gradient; 
+c.fillRect(0,300,100,100); 
+
+//gradient = c.createRadialGradient(400,300,0,400,300,100); 
+gradient = c.createRadialGradient(400,210,0,400,300,100); 
+gradient.addColorStop(0,'yellow');
+gradient.addColorStop(1,'red'); 
+c.fillStyle = gradient; 
+c.beginPath(); 
+c.arc(400,300,100,0,Math.PI*2,true); 
+//c.closePath(); 
+c.fill(); 
+
+
+
+</script>
+</body>
+</html>

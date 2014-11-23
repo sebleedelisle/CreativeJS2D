@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// Tree code converted from Jean-no's excellent Processing example : http://www.openprocessing.org/visuals/?visualID=1758
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var	c = context;
+
+c.strokeStyle = "#ffffff";
+
+
+var tree = new branchData(80,0, 0) ; 
+
+
+function draw() { 
+	
+	c.save(); 
+	c.clearRect(0,0,800,600); 
+	
+	c.translate(400,550); 
+	c.rotate(-Math.PI/2);
+	
+	tree.render(c);
+	c.restore(); 
+}
+
+function branchData(branchlen, angle, generation) {
+	
+	this.branchlen = branchlen; 
+	this.angle = angle; 
+	this.generation = generation; 
+	
+	this.children = []; 
+	this.counter =0; 
+	this.multiplier = random(0.01,0.1);  
+	
+	this.growth = 0; 
+	this.growthVel = 0; 
+	
+	
+	if(generation<10) { 
+		this.children.push(new branchData(branchlen*random(0.7,0.95), random(0,Math.PI/6), this.generation+1)); 
+		this.children.push(new branchData(branchlen*random(0.7,0.95), random(0,-Math.PI/6), this.generation+1)); 
+		
+		
+	}
+	
+	this.render = function(c) { 
+		
+		this.counter++; 
+		
+
+		c.save(); 
+
+		
+		this.growthVel*=0.85;
+		
+		var diff = 1 - this.growth; 
+		
+		this.growthVel +=(diff*0.05);
+		this.growth +=this.growthVel; 	
+
+		c.strokeStyle = "white"; 
+		c.lineWidth = 1; 
+		c.beginPath(); 
+		c.rotate(this.angle + (Math.sin(this.counter*this.multiplier)*Math.PI/128)); 
+		c.moveTo(0,0); 
+		c.lineTo(this.branchlen * this.growth, 0); 
+		c.stroke(); 
+		
+		c.translate(this.branchlen * this.growth, 0); 
+		
+		if(this.growth>0.6){
+			for(var i=0; i<this.children.length; i++) { 
+				var child = this.children[i]; 
+				child.render(c); 
+			
+			}
+		}
+		c.restore(); 
+	};
+	
+}
+
+
+
+
+</script>
+</body>
+</html>

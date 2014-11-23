@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// Tree code converted from Jean-no's excellent Processing example : http://www.openprocessing.org/visuals/?visualID=1758
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var	c = context;
+
+c.strokeStyle = "#ffffff";
+
+c.translate(400,550); 
+branch(100, radians(-90) );
+
+// x and y = pos
+// a = angle
+// s = stroke weight
+function branch(length, angle){
+	
+	c.save(); 
+	c.lineWidth = length*0.06;
+	c.lineCap = "round"; 
+	
+	c.rotate(angle); 
+	
+	c.line(0, 0, length, 0);
+
+	c.translate(length,0); 
+	
+	if(length>3){
+		//branch on the left
+		branch( length * random(0.55,0.80), radians(random(-17,-12)));
+		//branch on the right
+		branch( length * random(0.55,0.80), radians(random(17,12)));
+	}
+	
+	c.restore(); 
+}
+
+
+
+</script>
+</body>
+</html>

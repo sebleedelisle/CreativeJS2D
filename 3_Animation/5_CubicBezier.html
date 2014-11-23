@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		overflow: hidden;
+	}
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"> </script>
+<script src="js/dom-drag.js"> </script>
+<script src="js/JSTweener.js"> </script>
+<script src="../libs/DragHandle.js"> </script>
+<script>
+
+var	screenWidth	= window.innerWidth,
+	screenHeight = window.innerHeight,
+	halfWidth = window.innerWidth / 2,
+	halfHeight = window.innerHeight / 2,
+	canvas,
+	c, // c is the canvas 2D context
+	container;
+
+
+var	dragHandle1 = new DragHandle(200,100,14),
+	dragHandle2 = new DragHandle(400,200, 14),
+	controlHandle1 = new DragHandle(250,100,10),
+	controlHandle2 = new DragHandle(350,200,10); 
+
+
+var p1 = dragHandle1.pos,
+	p2 = dragHandle2.pos, 
+	c1 = controlHandle1.pos, 
+	c2 = controlHandle2.pos,
+	
+	progress = 0,
+	easedProgress = 0; 
+
+function setup() { 
+	
+	setupCanvas();
+
+	document.body.appendChild(dragHandle1.domElement); 
+	document.body.appendChild(dragHandle2.domElement); 
+	document.body.appendChild(controlHandle1.domElement); 
+	document.body.appendChild(controlHandle2.domElement);
+
+}
+
+	
+function draw() {
+
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	drawCubicBezier(p1,p2,c1,c2); 
+
+	var t= progress; 
+	// no easing 
+	easedProgress = t; 
+	
+	// quadratic ease in
+	//easedProgress = t * t; 
+	
+	// quadratic ease out
+	//t-=1; 
+	//easedProgress = t*-t +1;
+	
+	// quad ease in out 
+	//t*=2; 
+	//easedProgress = (t<1) ? t*t/2 : 0.5+(t-1)*(3-t)/2; 
+	
+	// cubic ease in
+	//easedProgress = t * t * t;
+	
+	// cubic ease out
+	//t-=1; 
+	//easedProgress = t*t*t + 1;
+	
+	var circlepos = new Vector2(JSTweener.Utils.bezier3(easedProgress,p1.x, c1.x, c2.x, p2.x),
+								JSTweener.Utils.bezier3(easedProgress,p1.y, c1.y, c2.y, p2.y)); 
+								
+	//circlepos.multiplyEq(easedProgress); 
+	//circlepos.plusEq(p1); 
+
+	drawCircle(circlepos, 12); 
+
+	progress+=0.01;
+	if(progress>1) progress = 0;
+}
+
+function drawCubicBezier(point1, point2, cont1, cont2) {
+	
+	c.strokeStyle = rgba(255,255,255,0.4); 
+	c.lineWidth = 2;  	
+
+	c.beginPath(); 
+	c.moveTo(cont1.x,cont1.y);
+	c.lineTo(point1.x, point1.y); 
+	c.bezierCurveTo(cont1.x, cont1.y, cont2.x, cont2.y, point2.x, point2.y);
+	c.lineTo(cont2.x, cont2.y); 
+	
+	c.stroke();
+	c.fillStyle = "#fff"; 
+	for(var t=0; t<=1;t+=0.025) {
+		x = JSTweener.Utils.bezier3(t,point1.x, cont1.x, cont2.x, point2.x); 
+		y = JSTweener.Utils.bezier3(t,point1.y, cont1.y, cont2.y, point2.y); 
+		
+		c.fillCircle(x, y, 1.5); 
+		
+		
+	}
+	
+}
+function drawCircle(p, r) {
+	
+	c.strokeStyle = "#fff"; 
+	c.lineWidth = 2;
+	c.fillStyle = "rgba(255,0,0,0.4)"; 
+	c.circle(p.x,p.y, r, 0, Math.PI*2, true); 
+	c.fill();
+	c.stroke();
+	
+}
+
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	container = document.createElement( 'div' );
+	container.className = "container";
+
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( container );
+	container.appendChild(canvas);	
+	
+}
+</script>
+</body>
+</html>

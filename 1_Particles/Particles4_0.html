@@ -111,17 +111,13 @@ function makeParticle(particleCount) {
 		// create a new particle in the middle of the stage
 		var particle = new ImageParticle(particleImage, mouseX, mouseY); 
 		
-		particle.velX = random(-5,5);// +  (mouseVelX*0.3) ;
-		particle.velY = random(-5,5);// +  (mouseVelY*0.3) ;
+		particle.velX = random(-5,5);
+		particle.velY = random(-5,5);
 		particle.size = random(2,4);
 		
 		particle.gravity = 0.06; 
 		particle.drag = 0.96;
 		particle.shrink = 0.98; 
-		
-		//particle.compositeOperation = 'lighter';
-		
-		//particle.shimmer = true; 
 		
 		
 		// add it to the array

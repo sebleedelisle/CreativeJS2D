@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;	
+		text-align:center;
+	}
+
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var c = context; 
+
+var level = 0; 
+
+c.translate(400,500); 
+c.rotate(radians(-90)); 
+branch(100,0); 
+
+function branch(length,rotation) { 
+
+
+	c.save(); 
+	
+	c.strokeStyle = hsl(level*10, 50, 50+(level*4)); 
+	c.lineWidth = length/10; 
+	c.lineCap = "round"; 
+	
+	c.rotate(rotation); 
+	c.beginPath(); 
+	c.moveTo(0,0); 
+	c.lineTo(length, 0); 
+	c.stroke(); 
+	
+	c.save(); 
+	c.rotate(Math.PI/2);
+	c.fillStyle = hsl(level*10, 50,50+(level*4));
+	c.fillText(level, 10,0); 
+	c.restore();
+
+	
+	if(level<12)	{
+		level++; 
+		c.translate(length/2, 0); 
+		branch(length*random(0.7,0.9), radians(random(-30,30)));
+		c.translate(length/2, 0);
+		branch(length*random(0.7,0.9), radians(random(-30,30)));
+		level--; 
+	}
+	
+	
+	c.restore(); 
+	
+}
+
+
+ 
+</script>
+</body>
+</html>

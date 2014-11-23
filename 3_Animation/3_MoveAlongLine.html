@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		overflow: hidden;
+	}
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script src="../libs/Vector2.js"> </script>
+<script src="js/dom-drag.js"> </script>
+<script src="../libs/DragHandle.js"> </script>
+<script>
+
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight,
+	halfWidth = window.innerWidth / 2,
+	halfHeight = window.innerHeight / 2,
+	canvas,
+	c, // c is the canvas 2D context
+	container;
+
+
+
+var dragHandle1 = new DragHandle(200,100,14),
+dragHandle2 = new DragHandle(400,200, 14); 
+
+var p1 = dragHandle1.pos,
+	p2 = dragHandle2.pos, 
+	v = p2.minusNew(p1),
+	progress = 0,
+	easedProgress = 0;
+
+function setup() {
+	setupCanvas();
+
+	document.body.appendChild(dragHandle1.domElement); 
+	document.body.appendChild(dragHandle2.domElement); 
+}
+
+
+
+function draw() {
+
+	v.copyFrom(p2); 
+	v.minusEq(p1); 
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	drawLine(p1,p2); 
+
+	var t= progress; 
+	// no easing 
+	easedProgress = t; 
+	// quadratic ease in
+	//easedProgress = t * t; 
+	// quadratic ease out
+	//t-=1; 
+	//easedProgress = t*-t +1;
+	//easedProgress = (t)*(2-t) ;
+	// quad ease in out 
+	//t*=2; 
+	//easedProgress = (t<1) ? t*t/2 : 0.5+(t-1)*(3-t)/2; 
+	
+	// cubic ease in
+	//easedProgress = t * t * t;
+	// cubic ease out
+	//t-=1; 
+	//easedProgress = t*t*t + 1;
+	
+	var circlepos = v.clone(); 
+	circlepos.multiplyEq(easedProgress); 
+	circlepos.plusEq(p1); 
+
+	drawCircle(circlepos, 12); 
+	
+	progress+=0.01;
+	if(progress>1) progress = 0;
+
+	
+}
+
+function drawLine(point1, point2) {
+	
+	c.strokeStyle = '#fff'; 
+	c.lineWidth = 2;  	
+
+	c.line(point1.x,point1.y, point2.x,point2.y);
+	
+}
+
+function drawCircle(p, r) {
+	
+	c.strokeStyle = "#fff"; 
+	c.lineWidth = 2;
+	c.fillStyle = "#800"; 
+	c.circle(p.x,p.y, r, 0, Math.PI*2, true); 
+	c.fill(); 
+	c.stroke(); 
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	container = document.createElement( 'div' );
+	container.className = "container";
+
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight; 
+	document.body.appendChild( container );
+	container.appendChild(canvas);	
+	
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	ctx = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var angle = 0; 
+var hueOffset = 0; 
+
+function draw() { 
+
+	ctx.clearRect(0,0,800,600); 
+
+	ctx.save(); 
+	ctx.translate(400,300); 
+
+	ctx.globalCompositeOperation = 'lighter'; 
+	
+	for(var i = 0; i<120; i++) { 
+		ctx.rotate(radians(angle)); 
+		
+		ctx.lineWidth = 10; 
+		ctx.strokeStyle = hsl((i*6)+hueOffset, 100, 60); 
+		ctx.strokeRect(100,100,50,40); 
+		
+		ctx.lineWidth = 16; 
+		ctx.strokeStyle = hsl((i*6)+hueOffset, 90, 30); 
+		ctx.strokeRect(100,100,50,40); 
+		
+		ctx.translate(10,4); 
+		ctx.scale(0.96,0.96); 
+	
+	}
+
+	ctx.restore(); 
+	angle+=0.05; 
+	hueOffset+=5; 
+}
+
+
+
+
+</script>
+</body>
+</html>

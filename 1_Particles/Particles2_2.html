@@ -35,11 +35,11 @@ var	screenWidth = window.innerWidth,
 	mouseDown = false,
 
 	particles = [],
-	maxParticles = 450,
+	maxParticles = 250,
 	particleImage = new Image(), 
 	counter = 0;
 	
-particleImage.src = 'img/ParticleWhite2.png'; 
+particleImage.src = 'img/ParticleBlue.png'; 
 
 function setup() {
 
@@ -63,7 +63,7 @@ function draw() {
 
 	// make some particles
 
-	makeParticle(1);		
+	if(counter%4==0) makeParticle(1);		
 	
 	// clear the canvas
 	context.clearRect(0,0, screenWidth, screenHeight);
@@ -98,27 +98,22 @@ function makeParticle(particleCount) {
 	for(var i=0; i<particleCount;i++) {
 		
 		// create a new particle in the middle of the stage
-		var particle = new ImageParticle(particleImage, mouseX, mouseY); 
+		var particle = new ImageParticle(particleImage, screenWidth/2, screenHeight/2); 
+		//var particle = new ImageParticle(particleImage, mouseX, mouseY); 
 		
-		particle.velX = random(-0.25,0.25);
-		particle.velY = 0;
-		particle.size = random(0.1,0.2);
-		particle.maxSize = 10; 
-		particle.alpha = random(0.1,0.3);
-		particle.gravity = -0.08; 
-		particle.drag = 0.97;
-		particle.shrink = random(1.01,1.02); 
-		particle.fade = 0.002; 
+		// give it a random x and y velocity
+		var speed = random(0,2); 
+		var angle = random(0,Math.PI*2); 
 		
-		particle.rotation = random(0,360);
-		particle.spin = random(-2,2); 
+		particle.velX = Math.cos(angle)*speed;
+		particle.velY = Math.sin(angle)*speed;
+		particle.size = random(1,7);
+		particle.gravity = 0; 
+		particle.drag = 0.995;
+		particle.shrink = 0.99;
+		
+		// sets the blend mode so particles are drawn with an additive blend
 		particle.compositeOperation = 'lighter';
-
-			
-		if(mouseDown) {
-			particle.size *= 2; 
-			particle.fade *= 0.8;
-		}
 		
 		// add it to the array
 		particles.push(particle); 

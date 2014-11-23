@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+		-webkit-user-select : none;
+		
+	}
+
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"></script>
+<script src="js/Bullet.js"></script>
+<script src="js/Ship.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+
+
+var halfWidth, 
+	halfHeight,
+	bullets,
+	ship,
+	mousePos;
+
+function setup() { 
+	frameRate = 30; 
+	setupCanvas();
+	halfWidth = canvas.width/2, 
+	halfHeight = canvas.height/2,
+	bullets = [],
+	ship = new Ship(halfWidth, halfHeight);	
+	mousePos = new Vector2(0,0); 
+}
+ 
+function draw() {
+	
+	mousePos.reset(mouseX-canvas.offsetLeft, mouseY-canvas.offsetTop); 
+	
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	ship.angle = degrees(Math.atan2(mousePos.y-halfHeight, mousePos.x-halfWidth));
+	ship.draw(c);
+	
+	for (var i=0; i<bullets.length;i++) {
+		bullet = bullets[i]; 
+		bullet.update(); 
+		bullet.draw(c); 	
+	}	
+}
+
+// called automatically by creative.js on a mouse press
+
+function onMouseDown() {
+
+	var bulletvel = new Vector2(10,0); 
+	var bulletpos = ship.pos.clone(); 
+	
+	var bullet = new Bullet(bulletpos.x, bulletpos.y, bulletvel.x, bulletvel.y);
+
+	bullets.push(bullet);  
+	
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+</script>
+</body>
+</html>

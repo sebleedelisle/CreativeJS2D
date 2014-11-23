@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <title>Canvas Asteroids</title>
+		<style type="text/css"> 
+			body {
+				background-color: #000000;
+				margin: 0px;
+				text-align:center;
+			}
+			canvas {
+				background-color:#111133;
+			}
+
+		</style>
+
+    </head>
+    <body>
+	<script src="../libs/creative.js"></script>
+    <script src="../libs/Vector2.js"></script>
+    <script src="js/MovingCircle.js"></script>
+    <script src="js/ImageParticle.js"></script>
+    <script>
+
+var canvas,
+c; // c is the canvas 2D context
+
+
+var asteroids = [],
+spareAsteroids = [],
+explosions = [],
+spareExplosions =[],
+particleImage = new Image();
+particleImage.src = 'img/ParticleBlue.png';
+
+function setup() { 
+	frameRate = 30;
+	setupCanvas();
+
+	for(var i = 0; i<5; i++) {
+
+	    var asteroid = new MovingCircle(random(0,canvas.width), random(0, canvas.height), 50);
+	    asteroid.vel.reset(3,0);
+	    asteroid.vel.rotate(random(0,360));
+	    asteroids.push(asteroid);
+
+	}
+}
+
+function draw() {
+
+    c.clearRect(0,0,canvas.width, canvas.height);
+
+    for(var i = 0; i< asteroids.length; i++)
+    {
+
+        var asteroid = asteroids[i];
+
+        if(!asteroid.enabled) continue;
+
+        asteroid.update(canvas);
+        asteroid.draw(c);
+    }
+    
+    // iteratate through each explosion
+    for (i=0; i<explosions.length; i++) {
+        var particle = explosions[i];
+
+
+        if(!particle.enabled) continue; 
+
+        // render it
+        particle.render(c);
+
+        // and then update. We always render first so particle
+        // appears in the starting point.
+        particle.update();
+
+		if(particle.size<0.001) {
+
+			particle.enabled = false; 
+			spareExplosions.push(particle); 
+
+		}
+    }
+}
+
+function onMouseDown() {
+
+
+    for(var i = 0; i<asteroids.length; i++)	{
+
+        var asteroid = asteroids[i];
+        if(!asteroid.enabled) continue;
+
+        if(asteroid.hitTest(mouseX - canvas.offsetLeft, mouseY- canvas.offsetTop)) {
+            if(asteroid.radius<15)
+            {
+				asteroid.enabled = false;
+				spareAsteroids.push(asteroid);
+			} else {
+
+ 				asteroid.radius = asteroid.radius/2;
+				asteroid.vel.reset(3,0);
+				asteroid.vel.rotate(random(0, 360));
+
+				var newasteroid = makeNewAsteroid(asteroid.pos.x, asteroid.pos.y, asteroid.radius);
+				newasteroid.vel.reset(-3,0);
+				newasteroid.vel.rotate(random(0, 180));
+            }
+
+			makeParticles(20, asteroid.pos.x, asteroid.pos.y);
+			break;
+		}
+	}
+}
+
+function makeNewAsteroid(x,y,radius) {
+    var newasteroid;
+
+    if(spareAsteroids.length>0) {
+        newasteroid = spareAsteroids.pop();
+        newasteroid.pos.reset(x,y);
+        newasteroid.radius = radius;
+    } else {
+        newasteroid = new MovingCircle(x,y,radius);
+        asteroids.push(newasteroid);
+    }
+
+
+    return newasteroid;
+}
+
+function makeParticles(particleCount, p_x, p_y) {
+
+	var particle;
+
+	for(var i=0; i<particleCount;i++) {
+		if(spareExplosions.length>0) {
+			particle = spareExplosions.pop(); 
+			particle.enabled = true; 
+			particle.posX = p_x; 
+			particle.posY = p_y;
+		} else {
+			particle = new ImageParticle(particleImage, p_x, p_y);
+			explosions.push(particle);
+		}
+
+	// create a new particle i			n the middle of the stage
+
+		var angle = Math.random()* Math.PI* 2; 
+		var speed = Math.random() * 10 +15; 
+		// give it a random x and y velocity
+		particle.velX = Math.cos(angle)*speed;
+		particle.velY = Math.sin(angle)*speed;
+		particle.size = random(1.2,1.5);
+
+		particle.drag = 0.85;
+		particle.shrink = 0.85;
+
+		// sets the blend mode so particles are drawn with an additive blend
+		particle.compositeOperation = 'lighter';
+
+
+    }
+
+}
+
+
+function setupCanvas() {
+
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+
+
+        </script>
+    </body>
+</html>

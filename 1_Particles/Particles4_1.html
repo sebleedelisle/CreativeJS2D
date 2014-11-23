@@ -33,13 +33,18 @@ var	screenWidth = window.innerWidth,
 	mouseX = screenWidth/2, 
 	mouseY = screenHeight/2, 
 	mouseDown = false,
+	
+	mouseVelX = 0, 
+	mouseVelY = 0, 
+	lastMouseX = mouseX, 
+	lastMouseY = mouseY,
 
 	particles = [],
-	maxParticles = 450,
+	maxParticles = 250,
 	particleImage = new Image(), 
 	counter = 0;
 	
-particleImage.src = 'img/ParticleWhite2.png'; 
+particleImage.src = 'img/ParticleCyan.png'; 
 
 function setup() {
 
@@ -61,9 +66,15 @@ function setup() {
 
 function draw() {
 
+
+	mouseVelX = mouseX-lastMouseX; 
+	mouseVelY = mouseY-lastMouseY; 
+	lastMouseX = mouseX; 
+	lastMouseY = mouseY;
+
 	// make some particles
 
-	makeParticle(1);		
+	 makeParticle(4);		
 	
 	// clear the canvas
 	context.clearRect(0,0, screenWidth, screenHeight);
@@ -100,25 +111,18 @@ function makeParticle(particleCount) {
 		// create a new particle in the middle of the stage
 		var particle = new ImageParticle(particleImage, mouseX, mouseY); 
 		
-		particle.velX = random(-0.25,0.25);
-		particle.velY = 0;
-		particle.size = random(0.1,0.2);
-		particle.maxSize = 10; 
-		particle.alpha = random(0.1,0.3);
-		particle.gravity = -0.08; 
-		particle.drag = 0.97;
-		particle.shrink = random(1.01,1.02); 
-		particle.fade = 0.002; 
+		particle.velX = random(-5,5) +  (mouseVelX*0.3) ;
+		particle.velY = random(-5,5) +  (mouseVelY*0.3) ;
+		particle.size = random(2,4);
 		
-		particle.rotation = random(0,360);
-		particle.spin = random(-2,2); 
+		particle.gravity = 0.06; 
+		particle.drag = 0.96;
+		particle.shrink = 0.98; 
+		
 		particle.compositeOperation = 'lighter';
-
-			
-		if(mouseDown) {
-			particle.size *= 2; 
-			particle.fade *= 0.8;
-		}
+		
+		particle.shimmer = true; 
+		
 		
 		// add it to the array
 		particles.push(particle); 

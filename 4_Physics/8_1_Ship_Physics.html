@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+
+</style>
+
+</head>
+<body>
+	
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"></script>
+<script src="js/Bullet.js"></script>
+<script src="js/ShipMovingSebs.js"></script>
+<script>
+
+var canvas,
+ 	c; // c is the canvas 2D context
+
+
+var	halfWidth, 
+	halfHeight,
+	bullets,
+	ship,
+	thrusting = false,
+	rotateLeft = false, 
+	rotateRight = false; 
+
+function setup() { 
+	
+	frameRate = 60; 
+	
+	setupCanvas();	
+	halfWidth = canvas.width/2;
+	halfHeight = canvas.height/2;
+	bullets = []
+	ship = new ShipMoving(halfWidth, halfHeight);
+	
+	document.addEventListener( 'keydown', onKeyDown, false );
+	document.addEventListener( 'keyup', onKeyUp, false );
+}
+
+function draw() {
+
+	c.clearRect(0,0,canvas.width, canvas.height); 
+	
+	if(thrusting) ship.thrust(); 
+	if(rotateLeft) ship.rotateLeft(); 
+	if(rotateRight) ship.rotateRight(); 
+	
+	ship.update(); 
+	with(ship.pos) {
+		if(x<0) x = canvas.width; 
+		else if(x>canvas.width) x = 0;
+		if(y<0) y = canvas.height; 
+		else if (y>canvas.height) y = 0; 
+	}
+	ship.draw(c, thrusting);
+
+}
+
+function onKeyDown(e) {	
+	e.preventDefault();
+	if(e.keyCode == 38) thrusting = true; 
+	else if(e.keyCode == 37) rotateLeft = true; 
+	else if (e.keyCode == 39) rotateRight = true; 
+	
+}
+function onKeyUp(e) {
+	if(e.keyCode == 38) thrusting = false; 
+	else if(e.keyCode == 37) rotateLeft = false; 
+	else if (e.keyCode == 39) rotateRight = false;
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	canvas.width = 800; 
+	canvas.height = 600; 
+	document.body.appendChild( canvas );
+	
+	c.strokeStyle = "#ffffff";
+	c.lineWidth = 2;
+}
+
+
+</script>
+</body>
+</html>

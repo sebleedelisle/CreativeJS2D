@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		overflow: hidden;
+	}
+</style>
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script src="../libs/Vector2.js"></script>	
+<script>
+
+// another example of smoothstepping with a 3D camera : 
+// http://threejs.org/examples/#webgl_particles_billboards_colors
+
+var	screenWidth = window.innerWidth,
+	screenHeight = window.innerHeight,
+	halfWidth = window.innerWidth / 2,
+	halfHeight = window.innerHeight / 2,
+	canvas,
+	c, // c is the canvas 2D context
+	container;
+
+var mousePos = new Vector2(0,0), 
+	pos = new Vector2(0,0),
+	target = new Vector2(0,0), 
+	vel = new Vector2(0,0); 
+
+function setup() { 
+	setupCanvas();
+}
+
+
+function draw() {
+	
+	mousePos.reset(mouseX, mouseY); 
+	
+	c.fillStyle = rgba(0,0,0,0.1); 
+	c.fillRect(0,0,screenWidth, screenHeight); 
+	
+	target.copyFrom(mousePos); 
+	
+	var diff = target.minusNew(pos); 
+	diff.multiplyEq(0.1);
+	
+	pos.plusEq(diff); 
+	   
+	drawCircle(pos.x, pos.y, 20); 
+
+	
+}
+
+function drawCircle(x,y, r) {
+	
+	gradient = c.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r); 
+		gradient.addColorStop(0,'white');
+		gradient.addColorStop(0.15,'red');
+		gradient.addColorStop(1,'#500');
+		
+	c.strokeStyle = "#fff"; 
+	c.lineWidth = 2;
+	c.fillStyle =gradient; 
+	c.fillCircle(x, y, r); 
+	
+}
+
+function setupCanvas() {
+	
+	canvas = document.createElement( 'canvas' );
+	c = canvas.getContext( '2d' );
+	container = document.createElement( 'div' );
+	container.className = "container";
+
+	canvas.width = screenWidth; 
+	canvas.height = screenHeight; 
+	document.body.appendChild( container );
+	container.appendChild(canvas);	
+	
+}
+
+</script>
+</body>
+</html>
