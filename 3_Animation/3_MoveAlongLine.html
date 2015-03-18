@@ -16,6 +16,7 @@
 <script src="../libs/Vector2.js"> </script>
 <script src="js/dom-drag.js"> </script>
 <script src="../libs/DragHandle.js"> </script>
+<script src="js/JSTweener.js"> </script>
 <script>
 
 var	screenWidth = window.innerWidth,
@@ -54,10 +55,9 @@ function draw() {
 	c.clearRect(0,0,canvas.width, canvas.height); 
 	
 	drawLine(p1,p2); 
-
-	var t= progress; 
-	// no easing 
-	easedProgress = t; 
+	
+	
+	
 	// quadratic ease in
 	//easedProgress = t * t; 
 	// quadratic ease out
@@ -73,6 +73,12 @@ function draw() {
 	// cubic ease out
 	//t-=1; 
 	//easedProgress = t*t*t + 1;
+	
+	//http://hosted.zeh.com.br/tweener/docs/en-us/misc/transitions.html
+	//easedProgress = JSTweener.easingFunctions.easeInOutSine(progress, 0, 1, 1); 
+ 	
+	
+	
 	
 	var circlepos = v.clone(); 
 	circlepos.multiplyEq(easedProgress); 
@@ -118,6 +124,48 @@ function setupCanvas() {
 	container.appendChild(canvas);	
 	
 }
+
+
+// LIST OF EASING FUNCTIONS IN JSTWEENER
+// easeInQuad: function(t, b, c, d) {
+// easeOutQuad: function(t, b, c, d) {
+// easeInOutQuad: function(t, b, c, d) {
+// easeInCubic: function(t, b, c, d) {
+// easeOutCubic: function(t, b, c, d) {
+// easeInOutCubic: function(t, b, c, d) {
+// easeOutInCubic: function(t, b, c, d) {
+// easeInQuart: function(t, b, c, d) {
+// easeOutQuart: function(t, b, c, d) {
+// easeInOutQuart: function(t, b, c, d) {
+// easeOutInQuart: function(t, b, c, d) {
+// easeInQuint: function(t, b, c, d) {
+// easeOutQuint: function(t, b, c, d) {
+// easeInOutQuint: function(t, b, c, d) {
+// easeOutInQuint: function(t, b, c, d) {
+// easeInSine: function(t, b, c, d) {
+// easeOutSine: function(t, b, c, d) {
+// easeInOutSine: function(t, b, c, d) {
+// easeOutInSine: function(t, b, c, d) {
+// easeInExpo: function(t, b, c, d) {
+// easeOutExpo: function(t, b, c, d) {
+// easeInOutExpo: function(t, b, c, d) {
+// easeOutInExpo: function(t, b, c, d) {
+// easeInCirc: function(t, b, c, d) {
+// easeOutCirc: function(t, b, c, d) {
+// easeInOutCirc: function(t, b, c, d) {
+// easeOutInCirc: function(t, b, c, d) {
+// easeInElastic: function(t, b, c, d, a, p) {
+// easeOutElastic: function(t, b, c, d, a, p) {
+// easeInOutElastic: function(t, b, c, d, a, p) {
+// easeOutInElastic: function(t, b, c, d, a, p) {
+// easeInBack: function(t, b, c, d, s) {
+// easeOutBack: function(t, b, c, d, s) {
+// easeInOutBack: function(t, b, c, d, s) {
+// easeOutInBack: function(t, b, c, d, s) {
+// easeInBounce: function(t, b, c, d) {
+// easeOutBounce: function(t, b, c, d) {
+// easeInOutBounce: function(t, b, c, d) {
+// easeOutInBounce: function(t, b, c, d) {
 
 </script>
 </body>
