@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center;
+	}
+	canvas {
+		background-color:#111133;
+	}
+	.container {
+		width:auto;
+	
+	}
+</style>
+
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>	
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	ctx = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var angle = 0; 
+
+function draw() { 
+	
+	ctx.clearRect(0,0,800,600); 
+	ctx.strokeStyle = '#fff';
+	ctx.lineWidth = 4; 
+
+	ctx.save(); 
+
+	ctx.translate(400,300); 
+
+//	drawShape(0,0,6,50);
+
+	for(var i = 0; i<60; i++) {
+			ctx.strokeStyle = hsl(i*6,100,50);    //'hsl('+i*6+',100%,50%)'; 
+			drawStar(0,0,5,400,100); 
+			ctx.scale(0.96,0.96); 
+			ctx.rotate(radians(angle));
+		}
+
+	ctx.restore();
+	angle+=0.1; 
+
+}
+
+function drawShape(x, y, numsides, radius) { 
+
+
+	ctx.save(); 
+	ctx.translate(x,y); 
+	
+	var angle = Math.PI*2/numsides; 
+	ctx.beginPath(); 
+	
+	for(var i = 0; i<numsides; i++) { 
+		ctx.save(); 
+		
+		ctx.rotate(angle*i); 
+		ctx.lineTo(radius, 0); 
+		
+		
+		ctx.restore(); 
+	}
+	ctx.closePath(); 
+	
+	ctx.stroke(); 
+	ctx.restore(); 
+	
+}
+
+
+
+function drawStar(x, y, numsides, radius1, radius2) { 
+
+//console.log(radius1, radius2); 
+	ctx.save(); 
+	ctx.translate(x,y); 
+	numsides*=2; 
+	var angle = (Math.PI*2/numsides); 
+	ctx.beginPath(); 
+	
+	for(var i = 0; i<numsides; i++) { 
+		ctx.save(); 
+		
+		ctx.rotate(angle*i); 
+		ctx.lineTo(((i%2)==0)?radius1:radius2, 0); 
+		
+		ctx.restore(); 
+	}
+	ctx.closePath(); 
+	
+	ctx.stroke(); 
+	ctx.restore(); 
+	
+}
+
+</script>
+</body>
+</html>
