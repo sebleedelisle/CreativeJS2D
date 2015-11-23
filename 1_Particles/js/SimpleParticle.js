@@ -25,6 +25,9 @@ function Particle(posx, posy) {
 	// subtracted from the alpha every frame to make it fade out
 	this.fade = 0; 
 
+	this.colour = "white";
+	
+
 	this.update = function() {
 	
 		// simulate drag
@@ -48,10 +51,15 @@ function Particle(posx, posy) {
 	
 	this.render = function(c) {
 		
+		c.save(); // save the current draw state
+		
 		if(this.alpha<0.01) return; 
 		
-		// set the fill style to have the right alpha
-		c.fillStyle = "rgba(255,255,255,"+this.alpha+")";
+		// set the fill style
+		c.fillStyle = this.colour; 
+		
+		// and alpha
+		c.globalAlpha = this.alpha; 
 		
 		// draw a circle of the required size
 		c.beginPath();
@@ -59,7 +67,8 @@ function Particle(posx, posy) {
 	
 		// and fill it
 		c.fill();
-	
+		
+		c.restore(); 
 	};
 
 

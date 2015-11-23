@@ -36,13 +36,15 @@ MovingCircle = function (x,y,radius){
 		diff.x-=x; 
 		diff.y-=y; 
 		
-		//var distanceSquared =  (diff.x * diff.x) + (diff.y * diff.y)  ; 
+		var distanceSquared =  (diff.x * diff.x) + (diff.y * diff.y); 
 		
+		var distance = Math.sqrt(distanceSquared); 
 		
+		return distance < this.radius; 
+				
 		// now check built in vector function 
 		// then use optimised version
-		
-		return diff.isMagLessThan(this.radius); 
+
 	};
 	
 };
