@@ -22,14 +22,14 @@ Asteroid = function (x,y,radius)
 			counter++; 
 			
 			if(counter%2==0)
-				temp.reset(radius * ((Math.random()*0.4)+0.6),0); 
+				temp.reset(radius * random(0.6,1)); 
 			else
 				temp.reset(radius,0); 
 
 			temp.rotate(angle);
 	
 			this.points.push(temp.clone()); 
-			angle+=15+Math.random()*20; 
+			angle+=random(15,35); 
 						
 		}
 	

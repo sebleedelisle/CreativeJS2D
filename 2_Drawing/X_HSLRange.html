@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: white;
+		margin: 0px;
+		text-align:center; 
+	}
+	canvas {
+		background-color:white;
+	}
+	
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	ctx = canvas.getContext( '2d' );
+
+canvas.width = 1100; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+
+var minHue = 180, 
+	maxHue = 220,
+	minSat = 0, 
+	maxSat = 100, 
+	minLightness = 0, 
+	maxLightness = 100; 
+	
+	
+function setup() { 
+
+	for(var i = 0; i<10; i++) { 
+		
+		drawHSLSquare(i*100, 10, map(i, 0, 10,minLightness, maxLightness)); 	
+		
+		
+	}
+	
+}
+
+function drawHSLSquare(x, y, lightness){ 
+	ctx.save(); 
+	ctx.translate(x, y); 
+	
+	for(var col = 0; col<100; col++) { 
+		for(var row = 0; row<100; row++) {
+			ctx.fillStyle = hsl(map(col, 0, 100, minHue, maxHue), 
+								map(row, 0, 100, minSat, maxSat), 
+								lightness); 
+			ctx.fillRect(col, row*4, 1,4); 
+			
+	
+	
+		}
+	}
+	ctx.restore(); 
+}
+	
+
+
+
+</script>
+</body>
+</html>
