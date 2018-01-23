@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title></title>
+<style type="text/css"> 
+	body {
+		background-color: #000000;
+		margin: 0px;
+		text-align:center; 
+	}
+	canvas {
+		background-color:#111133;
+	}
+	
+</style>
+
+</head>
+<body>
+<script src="../libs/creative.js"></script>
+<script>
+
+// canvas element and 2D context
+var canvas = document.createElement( 'canvas' ),
+	context = canvas.getContext( '2d' );
+
+canvas.width = 800; 
+canvas.height = 600; 
+document.body.appendChild(canvas);
+var stars = []; 
+
+for(var i = 0; i<500; i++){ 
+	var x = random(-300,300); 
+	var y = random(-200,200);
+	var z = random(-250,250); 
+	for(var j=0;j<4; j++) { 
+		stars.push(new Star(x, y, z+j*10));
+	}
+}
+
+function draw() { 
+
+	context.fillStyle = rgba(0,0,0,1); 
+	context.fillRect(0,0,800,600);
+	context.save(); 
+	context.translate(400,300); 
+	
+	for(var i = 0; i<stars.length; i++) { 
+		var star = stars[i]; 
+		star.render(); 
+		star.z-=1;
+		if(star.z<-250) star.z+=500;
+	
+	}
+	
+	context.restore(); 
+
+}
+
+function Star(x,y,z) { 
+
+	this.x = x; 
+	this.y = y; 
+	this.z = z; 
+
+	var fov = 250; 
+	
+	this.render = function () { 
+	
+		var scalefactor = fov/(fov+this.z); 
+		var x2d = this.x*scalefactor; 
+		var y2d = this.y*scalefactor; 
+		context.fillStyle = 'white';
+		context.fillCircle(x2d, y2d, scalefactor); 
+	
+	}
+	
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
